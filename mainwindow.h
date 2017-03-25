@@ -18,6 +18,8 @@ public:
 private slots:
     void serialReceived();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

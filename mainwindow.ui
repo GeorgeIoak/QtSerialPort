@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Test Application</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QPushButton" name="pushButton">
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Hello World</string>
+     <string>Send Command</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -40,6 +40,16 @@
      <string>TextLabel</string>
     </property>
    </widget>
+   <widget class="QLineEdit" name="lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>160</y>
+      <width>211</width>
+      <height>33</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -50,6 +60,12 @@
      <height>27</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuTest_Application">
+    <property name="title">
+     <string>Test Application</string>
+    </property>
+   </widget>
+   <addaction name="menuTest_Application"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
