@@ -12,6 +12,20 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug("Some test Output");
     ui->setupUi(this);
     ui->label->clear();
+
+
+     *  Testing code, prints the description, vendor id, and product id of all ports.
+     *  
+    qDebug() << "Number of ports: " << QSerialPortInfo::availablePorts().length() << "\n";
+    foreach(const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts()){
+        qDebug() << "Description: " << serialPortInfo.description() << "\n";
+        qDebug() << "Has vendor id?: " << serialPortInfo.hasVendorIdentifier() << "\n";
+        qDebug() << "Vendor ID: " << serialPortInfo.vendorIdentifier() << "\n";
+        qDebug() << "Has product id?: " << serialPortInfo.hasProductIdentifier() << "\n";
+        qDebug() << "Product ID: " << serialPortInfo.productIdentifier() << "\n";
+    }
+
+
     Serial = new QSerialPort(this);
     Serial-> setPortName("/dev/ttyACM0");
     Serial-> setBaudRate(QSerialPort :: Baud115200);
