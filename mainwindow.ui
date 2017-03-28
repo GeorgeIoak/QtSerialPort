@@ -14,7 +14,7 @@
    <string>Test Application</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="btnSendCmd">
     <property name="geometry">
      <rect>
       <x>120</x>
@@ -27,7 +27,7 @@
      <string>Send Command</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="dataReceived">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -37,10 +37,10 @@
      </rect>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string/>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="cmdEntered">
     <property name="geometry">
      <rect>
       <x>120</x>
