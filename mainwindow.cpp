@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QtSerialBus>
 #include <QDebug>
 #include <QMessageBox>
 #include <string>
