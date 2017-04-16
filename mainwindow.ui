@@ -62,7 +62,7 @@
    </property>
    <widget class="QMenu" name="menuTest_Application">
     <property name="title">
-     <string>Test Application</string>
+     <string>Code will insert : and append LRC</string>
     </property>
    </widget>
    <addaction name="menuTest_Application"/>

@@ -37,9 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
         //  check if the serialport has both a product identifier and a vendor identifier
                 if(serialPortInfo.hasProductIdentifier() && serialPortInfo.hasVendorIdentifier()){
                     //  check if the product ID and the vendor ID match those of the smoothie
-                    if((serialPortInfo.productIdentifier() == fluosense_product_id)
-                            && (serialPortInfo.vendorIdentifier() == fluosense_vendor_id)){
-                        port_is_available = true; //    fluosense is available on this port
+                    if((serialPortInfo.productIdentifier() == fluosens_product_id)
+                            && (serialPortInfo.vendorIdentifier() == fluosens_vendor_id)){
+                        port_is_available = true; //    fluosens is available on this port
                         port_name = serialPortInfo.portName();
                     }
                 }
@@ -89,10 +89,27 @@ void MainWindow::on_btnSendCmd_clicked()
 {
     QByteArray cmdText;
     cmdText.append(ui->cmdEntered->text());
-    cmdText.append("\r\n");
+    // Convert to binary
+    QByteArray theCMD = QByteArray::fromHex(cmdText);
+    // Step 1, sum bytes (relies on char losing any overflow)
+    char LRC = 0;
+    foreach (char c, theCMD)
+        LRC += c;
+        // steps 2 and 3: negate result
+        LRC = -LRC;
+
+    qDebug() << "Input    =" << theCMD.toHex().toUpper();
+    theCMD.append(LRC);
+    theCMD = theCMD.toHex().toUpper();
+    qDebug() << "theCMD after Hex & Upper =" << theCMD;
+    //qDebug() << "With LRC =" << theCMD.toHex().toUpper();
+    theCMD.prepend(":"); //Start Frame
+    theCMD.append("\r\n"); // Fluo Sens needs CRLF
+
     ui->dataReceived->clear();
-    qDebug() << cmdText;
-    mySerial->write(cmdText);
+    qDebug() << "theCMD is " << theCMD;
+    mySerial->write(theCMD);
     //mySerial->flush();
     cmdText.clear();
+    theCMD.clear();
 }
