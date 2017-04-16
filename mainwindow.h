@@ -28,6 +28,8 @@ private:
     QSerialPort *mySerial;
     static const quint16 smoothie_vendor_id = 7504;
     static const quint16 smoothie_product_id = 24597;
+    static const quint16 fluosense_vendor_id = 1027;
+    static const quint16 fluosense_product_id = 24577;
     QByteArray serialData;
     QString serialBuffer;
     QString parsed_data;

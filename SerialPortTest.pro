@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-QT       += serialport serialbus
+QT       += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

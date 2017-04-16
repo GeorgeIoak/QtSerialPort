@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include <QSerialPort>
 #include <QSerialPortInfo>
-#include <QtSerialBus>
 #include <QDebug>
 #include <QMessageBox>
 #include <string>
@@ -31,30 +30,30 @@ MainWindow::MainWindow(QWidget *parent) :
         qDebug() << "Product ID: " << serialPortInfo.productIdentifier() << "\n";
     }
 
-    bool smoothie_is_available = false;
-    QString smoothie_port_name;
+    bool port_is_available = false;
+    QString port_name;
 
     foreach(const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts()){
         //  check if the serialport has both a product identifier and a vendor identifier
                 if(serialPortInfo.hasProductIdentifier() && serialPortInfo.hasVendorIdentifier()){
                     //  check if the product ID and the vendor ID match those of the smoothie
-                    if((serialPortInfo.productIdentifier() == smoothie_product_id)
-                            && (serialPortInfo.vendorIdentifier() == smoothie_vendor_id)){
-                        smoothie_is_available = true; //    smoothie is available on this port
-                        smoothie_port_name = serialPortInfo.portName();
+                    if((serialPortInfo.productIdentifier() == fluosense_product_id)
+                            && (serialPortInfo.vendorIdentifier() == fluosense_vendor_id)){
+                        port_is_available = true; //    fluosense is available on this port
+                        port_name = serialPortInfo.portName();
                     }
                 }
     }
 
     /*
-     * Open and Configure the Smoothie Serial Port
+     * Open and Configure the Serial Port
      */
 
-    if(smoothie_is_available){
-        qDebug() << "found the Smoothie...\n";
-        mySerial-> setPortName(smoothie_port_name);
+    if(port_is_available){
+        qDebug() << "found the Detector...\n";
+        mySerial-> setPortName(port_name);
         mySerial-> open(QSerialPort::ReadWrite);
-        mySerial-> setBaudRate(QSerialPort::Baud115200);
+        mySerial-> setBaudRate(QSerialPort::Baud57600);
         mySerial-> setDataBits(QSerialPort::Data8);
         mySerial-> setParity(QSerialPort::NoParity);
         mySerial-> setStopBits(QSerialPort::OneStop);
@@ -62,8 +61,8 @@ MainWindow::MainWindow(QWidget *parent) :
         //Serial-> write("config-get sd acceleration\n");
         QObject::connect(mySerial, SIGNAL(readyRead()), this, SLOT(serialReceived()));
     }else{
-        qDebug() << "Couldn't find the correct port for the Smoothie.\n";
-        QMessageBox::information(this, "Serial Port Error", "Couldn't open serial port to Smoothie.");
+        qDebug() << "Couldn't find the correct port for the Detector.\n";
+        QMessageBox::information(this, "Serial Port Error", "Couldn't open serial port to Detector.");
     }
 }
 
@@ -90,7 +89,7 @@ void MainWindow::on_btnSendCmd_clicked()
 {
     QByteArray cmdText;
     cmdText.append(ui->cmdEntered->text());
-    cmdText.append("\r");
+    cmdText.append("\r\n");
     ui->dataReceived->clear();
     qDebug() << cmdText;
     mySerial->write(cmdText);
