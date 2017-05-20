@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QSerialPort>
 #include <QByteArray>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -19,8 +20,11 @@ public:
 
 private slots:
     void serialReceived();
-
     void on_btnSendCmd_clicked();
+    void on_btnTake1_clicked();
+    void on_btnInit_clicked();
+    void showTime();
+    void justDoIt();
 
 private:
     Ui::MainWindow *ui;
@@ -33,6 +37,7 @@ private:
     QByteArray serialData;
     QString serialBuffer;
     QString parsed_data;
+    QTimer *timer;
+    QTimer *takeareading;
 };
-
 #endif // MAINWINDOW_H
