@@ -163,22 +163,22 @@ void MainWindow::on_btnSendCmd_clicked()
 
 void MainWindow::on_btnTake1_clicked()
 {
-    quint8 readings = ui->spinBox->value();
-    qDebug() << "Spin Box Value is " << readings;
-    for ( int i = 0; i < readings; i++ )
-    {
-        qDebug() << "i is " << i;
-        //takeareading->start(10000);
-        mySerial->write(":000602000001F7\r\n"); //Start Measurement
-        QThread::msleep(100);
-        mySerial->write(":000301000010EC\r\n"); //Read On/Off Value Registers
-        QThread::sleep(2);
-    }
+    int timeBetween = ui->spinBoxTime->value() * 1000;
+    takeareading->start(timeBetween);
+    qDebug() << "Time Between Readings is in ms " << timeBetween;
+    int readings = ui->spinBoxReadings->value();
+    //for ( int i = 0 ; i < readings ; i++ )
+    //{
+    //    QTimer::singleShot(timeBetween, this, SLOT(justDoIt()));
+    //    qDebug() << "i is " << i;
+    //}
 }
 
 void MainWindow::justDoIt()
 {
-    takeareading->start(10000);
+        mySerial->write(":000602000001F7\r\n"); //Start Measurement
+        QThread::msleep(100);
+        mySerial->write(":000301000010EC\r\n"); //Read On/Off Value Registers
 }
 
 void MainWindow::on_btnInit_clicked()
@@ -203,4 +203,17 @@ void MainWindow::showTime()
     if ((time.second() % 2) == 0)
         text[5] = ' ';
     ui->label_DateTime->setText(text);
+}
+
+void MainWindow::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == takeareading->timerId()) {
+        ++step;
+        qDebug() << "I'm in the timer event";
+        //update();
+        if (step > readings)
+            takeareading->stop();
+    } else {
+        QWidget::timerEvent(event);
+    }
 }

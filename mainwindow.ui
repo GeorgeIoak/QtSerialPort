@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>210</x>
-      <y>160</y>
+      <y>120</y>
       <width>131</width>
       <height>31</height>
      </rect>
@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>110</y>
+      <y>70</y>
       <width>441</width>
       <height>51</height>
      </rect>
@@ -44,7 +44,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>160</y>
+      <y>120</y>
       <width>211</width>
       <height>33</height>
      </rect>
@@ -71,7 +71,7 @@
    <widget class="QPushButton" name="btnTake1">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>330</x>
       <y>200</y>
       <width>101</width>
       <height>31</height>
@@ -86,7 +86,7 @@
      <rect>
       <x>10</x>
       <y>200</y>
-      <width>101</width>
+      <width>71</width>
       <height>31</height>
      </rect>
     </property>
@@ -94,14 +94,59 @@
      <string>Initialize</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spinBox">
+   <widget class="QSpinBox" name="spinBoxReadings">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>120</x>
       <y>200</y>
       <width>50</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBoxTime">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>200</y>
+      <width>50</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="value">
+     <number>60</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>170</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string># of Readings</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>170</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Time Between</string>
     </property>
    </widget>
   </widget>

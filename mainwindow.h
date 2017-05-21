@@ -26,6 +26,9 @@ private slots:
     void showTime();
     void justDoIt();
 
+protected:
+    void timerEvent(QTimerEvent *event);
+
 private:
     Ui::MainWindow *ui;
 
@@ -39,5 +42,6 @@ private:
     QString parsed_data;
     QTimer *timer;
     QTimer *takeareading;
+    int step, readings;
 };
 #endif // MAINWINDOW_H
