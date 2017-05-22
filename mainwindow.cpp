@@ -8,8 +8,14 @@
 #include <QtWidgets>
 #include <QDateTime>
 #include <QThread>
+#include <QFile>
+#include <QTimerEvent>
 #include <string>
 #include <QModbus/QAsciiModbus>
+
+const QString WRITEKEY = "102COTKV9WVR7PG3";
+const QString strUpdateBase = "https://api.thingspeak.com/update";
+QString strUpdateURI = strUpdateBase + "?key=" + WRITEKEY;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -27,6 +33,12 @@ MainWindow::MainWindow(QWidget *parent) :
     mySerial = new QSerialPort(this);
     serialBuffer = "";
     parsed_data = "";
+
+    manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(replyFinished(QNetworkReply *)));
+
+    filename = QDateTime::currentDateTime().toString("yyMMdd").append(".csv");
 
     // QModbus Test Code
    // bool myPort = QAsciiModbus::open("/dev/ttyUSB0", BR57600, BPC8, OneStopBit, NoParity, NoFlowControl);
@@ -108,13 +120,12 @@ void MainWindow::serialReceived()
 
     // Read device address and command ID and control them.
     quint8 rxDeviceAddress , rxFunctionCode , byteCount;
-    quint16 rxRegAddress;
-    float    rxRegValue;
     QDataStream rxStream( pdu );
     rxStream.setByteOrder( QDataStream::BigEndian );
 
     if (ba.mid(3, 2) == "03") {
         rxStream >> rxDeviceAddress >> rxFunctionCode >> byteCount;
+        rxRegAddress = 256; //For now just assume starting at 256
         // It is ok, read and convert the data.
         QList<quint32> list; //was quint16
         quint32 tmp; //was quint16
@@ -127,7 +138,14 @@ void MainWindow::serialReceived()
             rxRegValue = list[i] * 0.000298; //convert to mV
             qDebug() << "list is: " << list[i] << ", " << rxRegValue << ", " << hexvalue;
             qDebug() << "The current time is " << QTime::currentTime().toString("hh:mm:ss");
+            if (ui->checkBoxLogData->isChecked())
+            {
+               logData();
+               rxRegAddress +=2;
+            }
         }
+        if (ui->checkBoxLogData->isChecked())
+            postThingSpeak(list);
     } else {
         rxStream >> rxDeviceAddress >> rxFunctionCode >> rxRegAddress;
     }
@@ -164,9 +182,12 @@ void MainWindow::on_btnSendCmd_clicked()
 void MainWindow::on_btnTake1_clicked()
 {
     int timeBetween = ui->spinBoxTime->value() * 1000;
-    takeareading->start(timeBetween);
+    takeareading->setInterval(timeBetween);
+    if (!takeareading->isActive())
+            takeareading->start();
     qDebug() << "Time Between Readings is in ms " << timeBetween;
-    int readings = ui->spinBoxReadings->value();
+    readings = ui->spinBoxReadings->value();
+    qDebug() << "Number of readings to take is " << readings;
     //for ( int i = 0 ; i < readings ; i++ )
     //{
     //    QTimer::singleShot(timeBetween, this, SLOT(justDoIt()));
@@ -176,9 +197,45 @@ void MainWindow::on_btnTake1_clicked()
 
 void MainWindow::justDoIt()
 {
-        mySerial->write(":000602000001F7\r\n"); //Start Measurement
-        QThread::msleep(100);
-        mySerial->write(":000301000010EC\r\n"); //Read On/Off Value Registers
+    --readings;
+    qDebug() << "Number of readings left is " << readings;
+    if ( readings <= 0 )
+    {
+        takeareading->stop();
+    }
+    mySerial->write(":000602000001F7\r\n"); //Start Measurement
+    QThread::msleep(100);
+    mySerial->write(":000301000010EC\r\n"); //Read On/Off Value Registers
+}
+
+void MainWindow::logData()
+{
+
+    QFile file(filename);
+    if (!file.open(QIODevice::Append | QIODevice::Text))
+        return;
+
+    QTextStream out(&file);
+    out << QTime::currentTime().toString("hh:mm:ss") << ", " << rxRegAddress << ", " << rxRegValue << "\n";
+}
+
+void MainWindow::postThingSpeak(QList<quint32> thelist)
+{
+    //Channel ID is 275969
+
+    for ( int i = 2 ; i < 8 ; i++ )
+    {
+        QString countmV = QString("%1").arg(thelist[i] * 0.000298); //convert to mV);
+        strUpdateURI += "&field" + QString("%1").arg(i-1) + "=" + countmV;
+    }
+    qDebug() << "URI is " << strUpdateURI << "\r\n";
+    manager->get(QNetworkRequest(QUrl(strUpdateURI)));
+
+}
+
+void MainWindow::replyFinished(QNetworkReply *reply)
+{
+    //do_something
 }
 
 void MainWindow::on_btnInit_clicked()
@@ -203,17 +260,4 @@ void MainWindow::showTime()
     if ((time.second() % 2) == 0)
         text[5] = ' ';
     ui->label_DateTime->setText(text);
-}
-
-void MainWindow::timerEvent(QTimerEvent *event)
-{
-    if (event->timerId() == takeareading->timerId()) {
-        ++step;
-        qDebug() << "I'm in the timer event";
-        //update();
-        if (step > readings)
-            takeareading->stop();
-    } else {
-        QWidget::timerEvent(event);
-    }
 }

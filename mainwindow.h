@@ -5,6 +5,9 @@
 #include <QSerialPort>
 #include <QByteArray>
 #include <QTimer>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QUrl>
 
 namespace Ui {
 class MainWindow;
@@ -18,6 +21,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void replyFinished(QNetworkReply *);
+
 private slots:
     void serialReceived();
     void on_btnSendCmd_clicked();
@@ -25,9 +31,8 @@ private slots:
     void on_btnInit_clicked();
     void showTime();
     void justDoIt();
-
-protected:
-    void timerEvent(QTimerEvent *event);
+    void logData();
+    void postThingSpeak(QList<quint32> thelist);
 
 private:
     Ui::MainWindow *ui;
@@ -40,8 +45,15 @@ private:
     QByteArray serialData;
     QString serialBuffer;
     QString parsed_data;
+    QString filename;
+    quint16 rxRegAddress;
     QTimer *timer;
     QTimer *takeareading;
-    int step, readings;
+    int step;
+    int readings;
+    float    rxRegValue;
+    QUrl url;
+    QNetworkAccessManager *manager;
+    QNetworkReply *reply;
 };
 #endif // MAINWINDOW_H

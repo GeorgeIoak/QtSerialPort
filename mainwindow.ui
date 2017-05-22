@@ -65,27 +65,27 @@
      </font>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="btnTake1">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>200</y>
-      <width>101</width>
+      <x>170</x>
+      <y>220</y>
+      <width>61</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Take Reading</string>
+     <string>Start</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnInit">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>200</y>
+      <x>0</x>
+      <y>160</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -97,7 +97,7 @@
    <widget class="QSpinBox" name="spinBoxReadings">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>110</x>
       <y>200</y>
       <width>50</width>
       <height>31</height>
@@ -110,8 +110,8 @@
    <widget class="QSpinBox" name="spinBoxTime">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>200</y>
+      <x>110</x>
+      <y>240</y>
       <width>50</width>
       <height>31</height>
      </rect>
@@ -123,11 +123,11 @@
      <number>60</number>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="label_Readings">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>170</y>
+      <x>0</x>
+      <y>200</y>
       <width>101</width>
       <height>21</height>
      </rect>
@@ -136,11 +136,11 @@
      <string># of Readings</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="label_TimeBetween">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>170</y>
+      <x>0</x>
+      <y>240</y>
       <width>101</width>
       <height>21</height>
      </rect>
@@ -149,32 +149,21 @@
      <string>Time Between</string>
     </property>
    </widget>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>457</width>
-     <height>27</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuTest_Application">
-    <property name="title">
-     <string>Code will insert : and append LRC</string>
+   <widget class="QCheckBox" name="checkBoxLogData">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>160</y>
+      <width>100</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Log Data</string>
     </property>
    </widget>
-   <addaction name="menuTest_Application"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
