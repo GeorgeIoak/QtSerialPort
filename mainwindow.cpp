@@ -261,3 +261,8 @@ void MainWindow::showTime()
         text[5] = ' ';
     ui->label_DateTime->setText(text);
 }
+
+void MainWindow::on_btnQuit_clicked()
+{
+    QCoreApplication::quit();
+}

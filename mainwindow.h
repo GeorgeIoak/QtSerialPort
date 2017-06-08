@@ -33,6 +33,7 @@ private slots:
     void justDoIt();
     void logData();
     void postThingSpeak(QList<quint32> thelist);
+    void on_btnQuit_clicked();
 
 private:
     Ui::MainWindow *ui;
