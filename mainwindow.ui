@@ -187,6 +187,22 @@
      <string>EXIT</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>20</y>
+      <width>255</width>
+      <height>54</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>images/sonanutech-logo.png</pixmap>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
