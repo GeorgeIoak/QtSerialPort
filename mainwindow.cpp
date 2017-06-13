@@ -11,7 +11,8 @@
 #include <QFile>
 #include <QTimerEvent>
 #include <string>
-#include <QModbus/QAsciiModbus>
+#include <wiringPi.h>
+//#include <QModbus/QAsciiModbus>
 
 const QString WRITEKEY = "102COTKV9WVR7PG3";
 const QString strUpdateBase = "https://api.thingspeak.com/update";

@@ -13,8 +13,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = SerialPortTest
 TEMPLATE = app
 
-INCLUDEPATH += /usr/include/QModbus
-LIBS += -lQModbus
+//INCLUDEPATH += /usr/include/QModbus
+//LIBS += -lQModbus
 
 SOURCES += main.cpp\
         mainwindow.cpp
