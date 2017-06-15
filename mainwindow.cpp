@@ -12,20 +12,46 @@
 #include <QTimerEvent>
 #include <string>
 #include <wiringPi.h>
+
 //#include <QModbus/QAsciiModbus>
+
+
+#include "SysfsOW.h"
 
 const QString WRITEKEY = "102COTKV9WVR7PG3";
 const QString strUpdateBase = "https://api.thingspeak.com/update";
 QString strUpdateURI = strUpdateBase + "?key=" + WRITEKEY;
+
+QStringList DS18B20 = SysfsOW::list(); //DS1820B temp sensor
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    state = 0;
+    num = 0;
+
+    setupPins(); //Initialize pins
+
+    // display the image in the main window QGraphicsView box
+    ui->graphicsView->setStyleSheet("background-color: transparent;");
+    scene = new QGraphicsScene();
+    ui->graphicsView->setScene(scene);
+    item = new QGraphicsPixmapItem(QPixmap("images/sonanutech-logo.png"));
+    scene->addItem(item);
+    qApp->setStyleSheet(
+                "QSpinBox::up-button   { subcontrol-position: top right;    width: 60px; height: 25px;}"
+                "QSpinBox::down-button { subcontrol-position: bottom right; width: 60px; height: 25px;}");
+
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(showTime()));
     timer->start(1000); //Update clock every second
+
+    getTempTimer = new QTimer(this);
+    connect(getTempTimer, SIGNAL(timeout()), this, SLOT(getTemp()));
+    getTempTimer->start(10000); //Get temp every 10 seconds
 
     takeareading = new QTimer();
     connect(takeareading, SIGNAL(timeout()), SLOT(justDoIt()));
@@ -263,7 +289,71 @@ void MainWindow::showTime()
     ui->label_DateTime->setText(text);
 }
 
+void MainWindow::getTemp()
+{
+    for (int i = 0; i < DS18B20.size(); ++i)
+    {
+        qDebug() << DS18B20.at(i);
+
+        double temp = 85.0;
+        if(SysfsOW::getValue(DS18B20.at(i), &temp))
+        {
+            qDebug() << "ok" << temp;
+            ui->tempBar->setValue(temp);
+        }
+        else
+        {
+            qDebug() << "fail" << temp;
+        }
+    }
+}
+
 void MainWindow::on_btnQuit_clicked()
 {
     QCoreApplication::quit();
+}
+
+void MainWindow::on_tempBar_valueChanged(int value)
+{
+
+}
+
+void MainWindow::setupPins()
+{
+    //PIN GPIO.4 as output
+    system("gpio mode 4 out"); //mode uses WiringPi pin notation
+    system("gpio export 23 out"); //export uses BCM pin notation
+
+    //PIN GPIO.5 as input, pullup resistor activated
+    system("gpio mode 5 in");
+    system("gpio mode 5 up");
+    system("gpio export 24 in");
+
+    //Call WiringPi initialization
+    wiringPiSetupSys();
+
+    qDebug("Pins setup finalized");
+
+}
+
+void MainWindow::interrupt()
+{
+    qDebug("ISR called");
+
+    QString message;
+    message.sprintf("Button pressed %d times",num++);
+    //ui->lineEdit->setText(message);
+}
+
+void MainWindow::on_btnHeater_clicked()
+{
+    qDebug("Button pressed");
+
+        if (state) {
+            state = 0;
+             digitalWrite(23, LOW);
+        } else {
+            state = 1;
+            digitalWrite(23, HIGH);
+        }
 }

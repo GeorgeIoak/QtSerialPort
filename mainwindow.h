@@ -8,6 +8,9 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QUrl>
+#include <QGraphicsPixmapItem>
+#include <QStringList>
+#include <QString>
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +23,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    void setupPins();
+    void interrupt();
 
 public slots:
     void replyFinished(QNetworkReply *);
@@ -34,6 +40,11 @@ private slots:
     void logData();
     void postThingSpeak(QList<quint32> thelist);
     void on_btnQuit_clicked();
+    void getTemp();
+
+    void on_tempBar_valueChanged(int value);
+
+    void on_btnHeater_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -50,11 +61,18 @@ private:
     quint16 rxRegAddress;
     QTimer *timer;
     QTimer *takeareading;
+    QTimer *getTempTimer;
     int step;
     int readings;
     float    rxRegValue;
+    int state;
+    int num;
     QUrl url;
     QNetworkAccessManager *manager;
     QNetworkReply *reply;
+
+    // needed for displaying image in QGraphicsView of main window
+    QGraphicsScene* scene;
+    QGraphicsPixmapItem* item;
 };
 #endif // MAINWINDOW_H

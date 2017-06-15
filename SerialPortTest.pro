@@ -19,6 +19,8 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp
 
+LIBS += -lwiringPi
+
 HEADERS  += mainwindow.h \
     flurosens.h
 
@@ -27,3 +29,9 @@ FORMS    += mainwindow.ui
 INSTALLS        = target
 target.files    = widgettest
 target.path     = /home/pi
+
+# The code that is "shared"
+include($$PWD/mod.pri)
+
+DISTFILES += \
+    mod.pri
