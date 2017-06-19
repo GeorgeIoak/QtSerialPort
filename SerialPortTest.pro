@@ -35,3 +35,5 @@ include($$PWD/mod.pri)
 
 DISTFILES += \
     mod.pri
+
+CONFIG += c++11
